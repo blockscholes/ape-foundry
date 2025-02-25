@@ -85,6 +85,7 @@ class FoundryNetworkConfig(PluginConfig):
     request_timeout: int = 30
     fork_request_timeout: int = 300
     process_attempts: int = 5
+    process_start_timeout: int = 120
 
     # RPC defaults
     base_fee: int = 0
@@ -419,7 +420,7 @@ class FoundryProvider(SubprocessProvider, Web3Provider, TestProviderAPI):
 
         if "127.0.0.1" in self._host or "localhost" in self._host:
             # Start local process
-            self.start()
+            self.start(timeout=self.settings.process_start_timeout)
 
         elif not self.is_connected:
             raise FoundryProviderError(f"Failed to connect to Anvil node at '{self._clean_uri}'.")
